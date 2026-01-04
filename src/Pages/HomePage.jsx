@@ -182,7 +182,14 @@ const HomePage = () => {
 
   return ( 
     <>
-    <div className="min-h-screen relative pt-20 bg-white overflow-x-hidden overflow-y-hidden">
+    <div className="min-h-screen relative pt-20 bg-white overflow-x-hidden overflow-y-hidden"
+    style={{
+backgroundImage: `
+  url(${bgImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    >
       {/* Hero Section */}
   {/* <HomeCarousel /> */}
 
