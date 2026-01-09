@@ -62,6 +62,52 @@ const AboutUsPage = () => {
     <div className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section */}
       <section className="relative max-w-7xl mx-auto px-4 pt-24 pb-20 md:pt-32 md:pb-28">
+         {/* Animated Plumbing-themed Icon Background Elements */}
+        
+        {/* Bathtub Icon */}
+        <motion.div 
+          className="absolute top-20 left-10 text-6xl opacity-10"
+          animate={{ y: [0, -20, 0], rotate: [-5, 5, -5] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          🛁
+        </motion.div>
+        
+        {/* Shower Icon */}
+        <motion.div 
+          className="absolute top-40 right-20 text-7xl opacity-10"
+          animate={{ y: [0, 15, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 5, repeat: Infinity }}
+        >
+          🚿
+        </motion.div>
+
+        {/* Droplet Icon */}
+        <motion.div 
+          className="absolute bottom-32 left-1/4 text-5xl opacity-10"
+          animate={{ y: [0, 30, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        >
+          💧
+        </motion.div>
+
+        {/* Wrench Icon */}
+        <motion.div 
+          className="absolute bottom-20 right-1/3 text-6xl opacity-10"
+          animate={{ rotate: [0, 15, -15, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        >
+          🔧
+        </motion.div>
+        
+        {/* Toilet Icon */}
+        <motion.div 
+          className="absolute top-60 left-1/3 text-5xl opacity-8"
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{ duration: 7, repeat: Infinity }}
+        >
+          🚽
+        </motion.div>
         {/* Animated Background Elements */}
         <motion.div 
           className="absolute top-32 left-10 w-32 h-32 bg-blue-200/20 rounded-full blur-3xl"
@@ -89,7 +135,7 @@ const AboutUsPage = () => {
             🚿 About PlumbGo
           </motion.span>
           
-          <motion.h1 
+          <motion.h1 data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 1 }}
@@ -101,7 +147,7 @@ const AboutUsPage = () => {
             </span>
           </motion.h1>
           
-          <motion.p 
+          <motion.p data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.9 }}
@@ -135,7 +181,7 @@ Book verified plumbers instantly from the comfort of your home. Fast response, t
               <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-3xl md:text-4xl shadow-2xl mx-auto mb-4 group-hover:scale-110 transition-all duration-500`}>
                 {stat.icon}
               </div>
-              <h3 className="text-2xl md:text-3xl font-black text-slate-900 text-center mb-2 group-hover:text-blue-600 transition-colors">
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 text-center mb-2 group-hover:text-teal-600 transition-colors">
                 {stat.number}
               </h3>
               <p className="text-slate-600 font-medium text-center text-sm md:text-base">{stat.label}</p>
@@ -196,7 +242,7 @@ Book verified plumbers instantly from the comfort of your home. Fast response, t
           transition={{ staggerChildren: 0.15, delayChildren: 0.3 }}
         >
           {services.map((service, index) => (
-            <motion.div
+            <motion.div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out"
               key={service.title}
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}

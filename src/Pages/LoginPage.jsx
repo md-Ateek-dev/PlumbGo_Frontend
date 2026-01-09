@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Client from "../Services/Client";
 import { useNavigate } from "react-router-dom";
 import { saveAuth } from "../Services/AuthUser";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import { Wrench, Mail, Lock, ArrowRight, KeyRound } from "lucide-react";
 import Swal from "sweetalert2";
@@ -190,7 +190,12 @@ const LoginPage = () => {
                   });
 
                   saveAuth(res.data.user, res.data.token);
-                  toast.success("Google login successful");
+              Swal.fire({
+              icon: "success",
+              title: "Success!",
+              text: "Google Login successful",
+              confirmButtonColor: "#0f766e"
+            });
                   navigate("/booking");
                 } catch (err) {
                   toast.error("Google login failed");

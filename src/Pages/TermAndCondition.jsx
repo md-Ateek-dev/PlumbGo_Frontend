@@ -4,6 +4,7 @@ import {
   FileText, Shield, CreditCard, AlertTriangle, XCircle, Scale, 
   CheckCircle, Clock, Phone, Mail, MapPin 
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const TermAndCondition = () => {
   const sections = [
@@ -269,6 +270,7 @@ const TermAndCondition = () => {
                 </p>
               </div>
             </div>
+            <Link to="/contact">
             <motion.button 
               className="group bg-gradient-to-r from-emerald-800 to-teal-700 text-white font-bold px-12 py-5 rounded-2xl text-lg shadow-2xl hover:shadow-3xl hover:from-emerald-800 hover:to-teal-800 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 inline-flex items-center gap-3"
               whileHover={{ scale: 1.05 }}
@@ -277,6 +279,7 @@ const TermAndCondition = () => {
               <Phone className="w-5 h-5" />
               Contact Support for Questions
             </motion.button>
+            </Link>
           </div>
         </motion.section>
 
@@ -287,7 +290,7 @@ const TermAndCondition = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
         >
-          <p className="text-2xl font-black text-slate-800 mb-4">© 2026 PlumbGo. All rights reserved.</p>
+          <p className="text-2xl font-black text-slate-800 mb-4">@ 2026 PlumbGo. All rights reserved.</p>
           <p className="text-lg text-slate-600 mb-6">
             Effective: {new Date().toLocaleDateString('en-IN')}
           </p>

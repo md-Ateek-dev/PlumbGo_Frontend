@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { submitContactForm } from "../Services/ContactUsApi";
 import Swal from "sweetalert2";
-
+import bgImage from "../assets/img_img.webp"
+import { MapPinPlus } from "lucide-react";
 const ContactPage = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -19,8 +20,8 @@ const ContactPage = () => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  // Live Location Logic *********
-const getLiveLocation = (auto = false) => {
+  /* ================= LIVE LOCATION ================= */
+  const getLiveLocation = (auto = false) => {
     if (!navigator.geolocation) {
       Swal.fire("Error", "Geolocation not supported", "error");
       return;
@@ -28,7 +29,7 @@ const getLiveLocation = (auto = false) => {
 
     if (!auto) {
       Swal.fire({
-        title: "Fetching location...",
+        title: "Detecting location...",
         text: "Please allow location access",
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
@@ -45,23 +46,23 @@ const getLiveLocation = (auto = false) => {
           );
           const data = await res.json();
 
-          const city =
-            data.address.city ||
-            data.address.town ||
-            data.address.village ||
-            data.address.suburb ||
-            "";
+          const fullAddress = data.display_name || "";
 
-          setForm((prev) => ({ ...prev, city }));
+          setForm((prev) => ({
+            ...prev,
+            city: fullAddress,
+            lat: latitude,
+            lng: longitude,
+          }));
 
           if (!auto) {
             Swal.fire({
               icon: "success",
               title: "Location Added",
-              text: city || "Location detected",
+              text: "Exact location detected",
             });
           }
-        } catch {
+        } catch (err) {
           Swal.fire("Error", "Unable to fetch address", "error");
         }
       },
@@ -69,11 +70,16 @@ const getLiveLocation = (auto = false) => {
         if (!auto) {
           Swal.fire("Permission Denied", "Location access denied", "error");
         }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
       }
     );
   };
 
-  /* -------- AUTO LOCATION ON PAGE LOAD -------- */
+  /* Auto-detect location on load */
   useEffect(() => {
     getLiveLocation(true);
   }, []);
@@ -151,10 +157,17 @@ Swal.fire({
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white"
+    style={{
+        backgroundImage: `
+          url(${bgImage})`,
+                backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+    >
       <div className="mx-auto max-w-5xl px-4 py-10">
         {/* Intro */}
-        <div className="mb-8">
+        <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="mb-8">
           <p className="text-sm font-bold uppercase tracking-wide text-teal-600">
             Contact PlumbGo
           </p>
@@ -171,7 +184,7 @@ Swal.fire({
         <div className="grid gap-8 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)]">
           {/* LEFT – Info */}
           <div className="space-y-5">
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
+            <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="rounded-2xl bg-white p-5 shadow-sm">
               <h2 className="mb-3 text-lg font-semibold text-slate-900">
                 Quick Contact
               </h2>
@@ -208,7 +221,7 @@ Swal.fire({
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
+            <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="rounded-2xl bg-white p-5 shadow-sm">
               <h2 className="mb-3 text-lg font-semibold text-slate-900">
                 Office & Timing
               </h2>
@@ -238,7 +251,7 @@ Swal.fire({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+            <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
  <iframe
                     className="h-32 w-full"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3556.276235802433!2d80.99633347523792!3d26.95815027662017!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bff2addd9b239%3A0xc21a9bbd557936ec!2sIntegral%20University!5e0!3m2!1sen!2sin!4v1766818587269!5m2!1sen!2sin" allowFullScreen=""
@@ -249,7 +262,7 @@ Swal.fire({
           </div>
 
           {/* RIGHT – Form */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-1 text-lg font-semibold text-slate-900">
               Contact Form
             </h2>
@@ -371,7 +384,7 @@ Swal.fire({
       onClick={()=> getLiveLocation(false)}
       className="rounded-lg bg-teal-600 px-3 py-2 text-xs font-medium text-white cursor-pointer hover:bg-teal-700"
     >
-      📍 Use Location
+      <span className="flex gap-2 mt-2"> <MapPinPlus /> Use Live Location</span>
     </button>
 
                 <button

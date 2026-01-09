@@ -6,8 +6,43 @@ import { createRazorpayOrder, verifyRazorpayPayment } from "../Services/PaymentA
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import { Wrench, Calendar, Clock, MapPin, FileText, CreditCard, CheckCircle2 } from "lucide-react";
+import { Wrench, Calendar, Clock, MapPin, FileText, CreditCard, CheckCircle2, MapPinPlus } from "lucide-react";
 import Swal from "sweetalert2";
+import bgImage from "../assets/img_img.webp"
+/* ---------------- TIME SLOTS ---------------- */
+const TIME_SLOTS = [
+  "09:00 AM - 10:00 AM",
+  "10:00 AM - 11:00 AM",
+  "11:00 AM - 12:00 PM",
+  "12:00 PM - 01:00 PM",
+  "02:00 PM - 03:00 PM",
+  "03:00 PM - 04:00 PM",
+  "04:00 PM - 05:00 PM",
+  "05:00 PM - 06:00 PM",
+];
+
+/* ---------------- HELPERS ---------------- */
+const getTodayDate = () => new Date().toISOString().split("T")[0];
+
+const isPastTimeSlot = (selectedDate, selectedSlot) => {
+  if (!selectedDate || !selectedSlot) return false;
+
+  const now = new Date();
+  const selected = new Date(selectedDate);
+
+  // agar date future hai → allow
+  if (selected > now && selected.toDateString() !== now.toDateString())
+    return false;
+
+  // agar aaj ki date hai → time check
+  if (selected.toDateString() !== now.toDateString()) return false;
+
+  const startTime = selectedSlot.split("-")[0].trim(); // "09:00 AM"
+  const slotDateTime = new Date(`${selectedDate} ${startTime}`);
+
+  return slotDateTime < now;
+};
+
 
 const loadRazorpayScript = () =>
   new Promise((resolve, reject) => {
@@ -32,6 +67,66 @@ const BookingPage = () => {
   const [fetchingServices, setFetchingServices] = useState(true);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [lat, setLat] = useState("");
+const [lng, setLng] = useState("");
+
+  // Live Location Logic
+  const getLiveLocation = (auto = false) => {
+  if (!navigator.geolocation) {
+    Swal.fire("Error", "Geolocation not supported", "error");
+    return;
+  }
+
+  if (!auto) {
+    Swal.fire({
+      title: "Detecting location...",
+      text: "Please allow location access",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        const data = await res.json();
+
+        const fullAddress = data.display_name || "";
+
+        // ✅ CORRECT STATE UPDATE
+        setAddress(fullAddress);
+        setLat(latitude);
+        setLng(longitude);
+
+        if (!auto) {
+          Swal.fire({
+            icon: "success",
+            title: "Location Added",
+            text: "Exact location detected",
+          });
+        }
+      } catch (err) {
+        Swal.fire("Error", "Unable to fetch address", "error");
+      }
+    },
+    () => {
+      if (!auto) {
+        Swal.fire("Permission Denied", "Location access denied", "error");
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0,
+    }
+  );
+};
+
 
   useEffect(() => {
     const fromUrl = searchParams.get("serviceId");
@@ -53,6 +148,11 @@ const BookingPage = () => {
 
     loadServices();
   }, [searchParams]);
+  
+/* -------- FILTER TIME SLOTS (PAST DISABLED) -------- */
+  const filteredSlots = TIME_SLOTS.filter(
+    (slot) => !isPastTimeSlot(date, slot)
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +161,17 @@ const BookingPage = () => {
       toast.error("Please fill all required fields");
       return;
     }
-
+    
+ // 🔴 Past time validation
+    if (isPastTimeSlot(date, timeSlot)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Invalid Time Slot",
+        text: "You cannot select a past time slot.",
+        confirmButtonColor: "#0f766e",
+      });
+      return;
+    }
     setLoading(true);
 
     try {
@@ -186,24 +296,31 @@ const BookingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen bg-white px-4 sm:px-6 py-8 sm:py-12"
+    style={{
+    backgroundImage: `
+      url(${bgImage})`,
+            backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+    >
       <div className="mx-auto max-w-2xl">
         
         {/* Header with animation */}
         <div className="text-center mb-8 animate-[fadeIn_0.5s_ease-out]">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mb-4 shadow-lg shadow-teal-500/30">
+          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mb-4 shadow-lg shadow-teal-500/30">
             <Wrench className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
+          <h1 data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-800 to-teal-600 bg-clip-text text-transparent mb-2">
             Book Your Service
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base">
+          <p data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" className="text-black text-sm sm:text-base">
             Fill in the details below to schedule your plumbing service
           </p>
         </div>
 
         {/* Form Card with glassmorphism */}
-        <form
+        <form data-aos="fade-up" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out"
           onSubmit={handleSubmit}
           className="bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 rounded-2xl p-6 sm:p-8 space-y-6 border border-white/20 animate-[slideUp_0.6s_ease-out]"
         >
@@ -241,8 +358,9 @@ const BookingPage = () => {
               <input
                 type="date"
                 value={date}
+                min={getTodayDate()}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm 
+                className="w-full  px-4 py-3 border border-slate-200 rounded-xl text-sm 
                   focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 
                   transition-all duration-300 bg-white hover:border-slate-300"
               />
@@ -254,15 +372,21 @@ const BookingPage = () => {
                 <Clock className="w-4 h-4" />
                 Time Slot *
               </label>
-              <input
-                type="text"
-                placeholder="10:00 AM - 11:00 AM"
-                value={timeSlot}
-                onChange={(e) => setTimeSlot(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm 
-                  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 
-                  transition-all duration-300 bg-white hover:border-slate-300"
-              />
+               <select
+          value={timeSlot}
+          onChange={(e) => setTimeSlot(e.target.value)}
+          className="w-full p-3 border border-slate-200 bg-white hover:border-slate-300 rounded-xl"
+        >
+          <option value="">Select Time Slot</option>
+          {filteredSlots.length === 0 && (
+            <option disabled>No slots available</option>
+          )}
+          {filteredSlots.map((slot) => (
+            <option key={slot} value={slot}>
+              {slot}
+            </option>
+          ))}
+        </select>
             </div>
           </div>
 
@@ -281,6 +405,13 @@ const BookingPage = () => {
                 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 
                 transition-all duration-300 bg-white hover:border-slate-300 resize-none"
             />
+            <button
+      type="button"
+      onClick={()=> getLiveLocation(false)}
+      className="rounded-lg bg-teal-600 px-3 py-2 text-xs font-medium text-white cursor-pointer hover:bg-teal-700"
+    >
+      <span className="flex gap-2 mt-2"> <MapPinPlus /> Use Live Location</span>
+    </button>
           </div>
 
           {/* Notes */}

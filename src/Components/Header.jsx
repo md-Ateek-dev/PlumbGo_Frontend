@@ -306,7 +306,7 @@
 // export default Header;
 
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { clearAuth, getCurrentUser } from "../Services/AuthUser";
 import {
@@ -314,20 +314,36 @@ import {
 } from "@mui/icons-material";
 
 const Header = () => {
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isActive = (path) =>
-    location.pathname === path
-      ? "text-emerald-600 bg-teal-50 shadow-lg shadow-emerald-100/50"
-      : "text-slate-700 hover:text-emerald-600 hover:bg-slate-50";
+  location.pathname === path
+    ? "text-emerald-400"
+    : scrolled
+    ? "text-white hover:text-emerald-400"
+    : "text-black hover:text-emerald-600";
+
 
   const handleLogout = () => {
     clearAuth();
     navigate("/login");
     setMobileMenuOpen(false);
   };
+useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 80) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -340,7 +356,12 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black bg-transparent backdrop-blur-xl shadow-sm border-b border-slate-200/50">
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
+    ${scrolled
+      ? "bg-black/90 backdrop-blur-md shadow-lg border-b border-white/10"
+      : "bg-transparent"}
+  `}>
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
@@ -349,16 +370,21 @@ const Header = () => {
               className="group relative flex items-center gap-2 transition-all duration-300 hover:scale-105"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-teal-500/50 transition-all duration-300 group-hover:rotate-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-700 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-teal-500/50 transition-all duration-300 group-hover:rotate-3">
                   {/* <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /> */}
                               <WaterDropIcon sx={{ color: 'white', fontSize: 28 }} />
                   
               </div>
               <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                <span className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
                   PlumbGo
                 </span>
-                <span className="text-[10px] font-medium text-slate-500 -mt-1 hidden sm:block">
+                <span className={`text-[10px] font-medium -mt-1 hidden sm:block
+                ${scrolled
+                  ? "text-white"
+                  : "text-black"
+                }
+                  `}>
                   Professional Services
                 </span>
               </div>
@@ -374,7 +400,7 @@ const Header = () => {
                 >
                   <span className="relative z-10">{label}</span>
                   {location.pathname === path && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full"></span>
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-emerald-700 to-teal-600 rounded-full"></span>
                   )}
                 </Link>
               ))}

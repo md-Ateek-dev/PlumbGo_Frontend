@@ -136,7 +136,7 @@ const HomeCarousel = () => {
             <Wrench className="absolute inset-0 m-auto text-teal-600 animate-pulse" size={24} />
           </div>
           <p className="text-sm font-medium text-slate-600 animate-pulse">
-            Loading login...
+            Loading Carousels...
           </p>
         </div>
       </div>
@@ -200,17 +200,17 @@ const HomeCarousel = () => {
           <div className="max-w-3xl text-center lg:text-left">
             {/* Small Label */}
             <div
-              className={`inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/50 backdrop-blur-md border border-white/20 rounded-full text-teal-600 text-xs sm:text-sm font-medium mb-3 sm:mb-4 transition-all duration-700 ${
+              className={`inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/70 backdrop-blur-md border border-white/20 rounded-full text-teal-800 text-xs sm:text-xl font-bold mb-3 sm:mb-4 transition-all duration-700 ${
                 isAnimating ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'
               }`}
             >
-              <span className="w-2 h-2 bg-teal-600 rounded-full animate-pulse"></span>
+              <span className="w-2 h-2 bg-teal-700 rounded-full animate-pulse"></span>
               PlumbGo
             </div>
 
             {/* Title */}
             <h1
-              className={`text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-emerald-700 mb-2 sm:mb-3 leading-tight transition-all duration-700 delay-75 ${
+              className={`text-4xl sm:text-5xl md:text-5xl lg:text-7xl font-bold text-emerald-700 mb-2 sm:mb-3 leading-tight transition-all duration-700 delay-75 ${
                 isAnimating ? 'opacity-0 -translate-y-8 blur-sm' : 'opacity-100 translate-y-0 blur-0'
               }`}
             >
@@ -220,7 +220,7 @@ const HomeCarousel = () => {
             {/* Subtitle */}
             {(current.subtitle || current.subtext) && (
               <p
-                className={`text-sm sm:text-base md:text-xl text-white/90 mb-4 sm:mb-6 max-w-2xl mx-auto lg:mx-0 transition-all duration-700 delay-150 ${
+                className={`text-xl sm:text-base md:text-2xl text-white/90 mb-4 sm:mb-6 max-w-2xl mx-auto lg:mx-0 transition-all duration-700 delay-150 ${
                   isAnimating ? 'opacity-0 -translate-y-12 blur-sm' : 'opacity-100 translate-y-0 blur-0'
                 }`}
               >
