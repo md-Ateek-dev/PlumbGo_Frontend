@@ -1,5 +1,5 @@
 import Client from "./Client";
-import { getUserToken } from "./authUser";
+import { getUserToken } from "../Services/AuthUser";
 
 // create razorpay order
 export const createRazorpayOrder = async (bookingId) => {
